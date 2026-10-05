@@ -28,8 +28,9 @@ function BrandPanel() {
         <Logo tone="light" />
       </Link>
 
-      <div className="relative z-10 flex flex-1 flex-col justify-center py-6">
-        <div className="relative mx-auto h-64 w-full max-w-md" aria-hidden>
+      {/* Content scrolls inside the panel on short screens, so nothing is cut off. */}
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col justify-center overflow-y-auto py-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="relative mx-auto h-52 w-full max-w-md shrink-0 xl:h-64" aria-hidden>
           <div className="auth-float absolute top-0 left-0 w-60 rounded-xl border border-white/15 bg-white/10 p-4 shadow-2xl backdrop-blur">
             <p className="text-[11px] tracking-wide text-white/70 uppercase">New lead</p>
             <p className="mt-1 font-semibold">Northwind Logistics</p>
@@ -38,7 +39,7 @@ function BrandPanel() {
           <div className="auth-float-slow absolute top-20 right-0 w-60 rounded-xl border border-white/15 bg-white/15 p-4 shadow-2xl backdrop-blur">
             <p className="text-[11px] tracking-wide text-white/70 uppercase">Deal won</p>
             <p className="mt-1 font-semibold">Harborview Health</p>
-            <p className="mt-2 text-lg font-semibold text-success">USD 72,000</p>
+            <p className="mt-2 text-lg font-semibold text-emerald-300">USD 72,000</p>
           </div>
           <div className="auth-float absolute bottom-0 left-8 w-72 rounded-xl border border-white/15 bg-slate-900/40 p-4 shadow-2xl backdrop-blur" style={{ animationDelay: '-2s' }}>
             <div className="flex items-center justify-between text-xs text-white/70">
