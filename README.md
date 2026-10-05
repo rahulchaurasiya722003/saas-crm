@@ -74,3 +74,7 @@ The output is written to `client/dist`.
 ## Contributing
 
 This project is under active development. Issues and suggestions are welcome.
+
+## License
+
+Released under the [ISC License](LICENSE).
