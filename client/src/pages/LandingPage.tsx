@@ -3,6 +3,7 @@ import {
   ArrowRight,
   Building2,
   CheckSquare,
+  ChevronDown,
   Columns3,
   Command,
   Contact,
@@ -11,7 +12,7 @@ import {
   Layers,
   LayoutDashboard,
   Menu,
-  Moon,
+  Phone,
   Server,
   ShieldCheck,
   Target,
@@ -21,6 +22,7 @@ import {
 } from 'lucide-react'
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { Logo } from '../components/common/Logo'
 import './landing.css'
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -89,37 +91,49 @@ function Reveal({ children, delay = 0, className = '' }: { children: ReactNode; 
   )
 }
 
+/* ---------- navigation data ---------- */
+
+type MenuItem = { label: string; description: string; id?: string; to?: string; href?: string }
+
+const PRODUCT_MENU: MenuItem[] = [
+  { id: 'modules', label: 'Modules', description: 'Dashboard, leads, companies, deals, tasks, and activity' },
+  { id: 'lifecycle', label: 'Sales lifecycle', description: 'How a lead becomes a won deal' },
+  { id: 'access', label: 'Roles & access', description: 'Four roles, enforced on the server' },
+  { id: 'platform', label: 'Platform', description: 'Frontend, API, data, and security layers' },
+]
+
+const RESOURCES_MENU: MenuItem[] = [
+  { id: 'roadmap', label: 'Roadmap', description: 'What is planned next' },
+  { href: 'https://github.com/rahulchaurasiya722003/saas-crm', label: 'Source code', description: 'View the project on GitHub' },
+  { to: '/login', label: 'Sign in', description: 'Open your workspace' },
+]
+
 /* ---------- content (drawn from the real codebase) ---------- */
 
-const NAV_LINKS = [
-  { id: 'features', label: 'Features' },
-  { id: 'workflow', label: 'Workflow' },
-  { id: 'access', label: 'Access' },
-  { id: 'stack', label: 'Tech' },
-]
-
 const STATS = [
-  { value: '7', label: 'CRM modules', hint: 'Leads to activities' },
+  { value: '7', label: 'CRM modules', hint: 'Leads through activity' },
   { value: '4', label: 'Team roles', hint: 'Admin to viewer' },
-  { value: '15', label: 'Granular permissions', hint: 'Enforced on the server' },
-  { value: '15 min', label: 'Access token lifetime', hint: 'Rotating refresh tokens' },
+  { value: '15', label: 'Granular permissions', hint: 'Checked on every request' },
+  { value: '6', label: 'Deal stages', hint: 'New to won or lost' },
 ]
 
-const FEATURES: { icon: LucideIcon; title: string; text: string }[] = [
-  { icon: Gauge, title: 'Dashboard', text: 'Headline KPIs, pipeline charts, and recent activity on one screen, so the day starts with context.' },
-  { icon: Target, title: 'Leads', text: 'Capture prospects with a status flow from new through qualified or converted. Search and filter across the full list.' },
-  { icon: Building2, title: 'Companies', text: 'Organizations with industry, location, and headcount, linked to every contact and deal that involves them.' },
-  { icon: Contact, title: 'Contacts', text: 'People inside each account, with the right owner and history attached to every conversation.' },
-  { icon: Columns3, title: 'Deal pipeline', text: 'A kanban board across six stages, from new to won or lost, with values and probabilities per deal.' },
-  { icon: CheckSquare, title: 'Tasks', text: 'Follow-ups with priority levels and status tracking, so commitments are never lost between calls.' },
+const LIFECYCLE = ['Lead', 'Qualified', 'Deal', 'Negotiation', 'Won', 'Customer']
+
+const MODULES: { icon: LucideIcon; title: string; text: string }[] = [
+  { icon: Gauge, title: 'Dashboard', text: 'Headline KPIs, pipeline charts, and recent activity on one screen, so every day starts with context.' },
+  { icon: Target, title: 'Leads', text: 'Capture prospects, assign an owner, and move each one through a status flow from new to converted.' },
+  { icon: Building2, title: 'Companies', text: 'Organizations with industry, location, and headcount, linked to every contact and deal they are part of.' },
+  { icon: Contact, title: 'Contacts', text: 'The people inside each account, with their owner and history attached to every conversation.' },
+  { icon: Columns3, title: 'Deal pipeline', text: 'A kanban board across six stages with deal values and win probabilities, so forecasting stays visible.' },
+  { icon: CheckSquare, title: 'Tasks', text: 'Follow-ups with priority levels and statuses, so commitments are never lost between calls and meetings.' },
   { icon: Activity, title: 'Activity feed', text: 'Calls, emails, meetings, and status changes logged as they happen, building a full account history.' },
 ]
 
 const WORKFLOW = [
-  { n: '01', title: 'Capture', text: 'A new lead arrives from your website, a referral, or an event. Add it in seconds and assign an owner.' },
-  { n: '02', title: 'Qualify & connect', text: 'Link the company and its contacts, then move the opportunity into the pipeline as a deal.' },
-  { n: '03', title: 'Progress', text: 'Track tasks and log every call and meeting. Move the deal through each stage until it is won.' },
-  { n: '04', title: 'Review', text: 'Watch the dashboard and reports for where revenue is moving, and where to focus next.' },
+  { n: '01', title: 'Capture', text: 'A new enquiry arrives from your website, a referral, or an event. Add it as a lead in seconds and assign an owner.' },
+  { n: '02', title: 'Connect', text: 'Link the lead to its company and contacts, so every person and organization sits in one record.' },
+  { n: '03', title: 'Progress', text: 'Turn qualified leads into deals, move them across the pipeline, and track the tasks that get them there.' },
+  { n: '04', title: 'Review', text: 'Use the dashboard and reports to see where revenue is moving and where the team should focus next.' },
 ]
 
 type Level = 'write' | 'read' | 'none'
@@ -137,27 +151,23 @@ const ACCESS_MATRIX: { area: string; admin: Level; manager: Level; agent: Level;
   { area: 'Organization settings', admin: 'write', manager: 'none', agent: 'none', viewer: 'none' },
 ]
 
-const TECH = ['React 19', 'TypeScript', 'Vite', 'Tailwind CSS v4', 'TanStack Query', 'Express 5', 'Prisma 7', 'PostgreSQL', 'JWT', 'Zod', 'Recharts', 'Helmet']
-
-const STACK_LAYERS: { icon: LucideIcon; title: string; items: string[] }[] = [
+const PLATFORM_LAYERS: { icon: LucideIcon; title: string; items: string[] }[] = [
   { icon: LayoutDashboard, title: 'Frontend', items: ['React 19 with TypeScript', 'Vite build and dev server', 'TanStack Query caching', 'Tailwind CSS v4 design tokens', 'Command palette and dark mode'] },
   { icon: Server, title: 'API', items: ['Express 5 with layered routes', 'Zod validation on every input', 'Rate-limited sign-in and sign-up', 'Helmet security headers', 'Server-side search and pagination'] },
-  { icon: Layers, title: 'Data', items: ['PostgreSQL with Prisma 7 ORM', 'Organization-scoped queries', 'Soft delete for recoverable records', 'Versioned migrations and seed data', 'Audit log model'] },
+  { icon: Layers, title: 'Data', items: ['PostgreSQL with Prisma 7 ORM', 'Organization-scoped queries', 'Soft delete for recoverable records', 'Versioned migrations and seed data', 'Audit log data model'] },
   { icon: KeyRound, title: 'Security', items: ['Short-lived JWT access tokens', 'Rotating refresh tokens in HTTP-only cookies', 'Refresh tokens stored as SHA-256 hashes', 'Role checks on every protected route', 'Passwords hashed with bcrypt'] },
 ]
 
-/* ---------- small pieces ---------- */
+const TECH = ['React 19', 'TypeScript', 'Vite', 'Tailwind CSS v4', 'TanStack Query', 'Express 5', 'Prisma 7', 'PostgreSQL', 'JWT', 'Zod', 'Recharts', 'Helmet']
 
-function Logo() {
-  return (
-    <span className="flex items-center gap-2.5">
-      <span aria-hidden className="flex size-8 items-center justify-center rounded-md bg-primary text-sm font-bold text-white shadow-md shadow-primary/30">
-        N
-      </span>
-      <span className="text-base font-semibold tracking-tight">NexaCRM</span>
-    </span>
-  )
-}
+const ROADMAP: { icon: LucideIcon; title: string; text: string }[] = [
+  { icon: Phone, title: 'Call management', text: 'Incoming and outgoing call logs, call history per customer, and call transfer between agents.' },
+  { icon: ShieldCheck, title: 'Support tickets', text: 'Ticket queues with priority, assignment, status flow, and SLA tracking after the sale.' },
+  { icon: Command, title: 'Automation', text: 'Auto-assign leads, create follow-up tasks, and notify managers when important events happen.' },
+  { icon: Zap, title: 'AI assistance', text: 'Call and meeting summaries, lead scoring, and follow-up recommendations for sales teams.' },
+]
+
+/* ---------- small pieces ---------- */
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return <p className="text-xs font-semibold tracking-[0.18em] text-primary uppercase">{children}</p>
@@ -171,6 +181,92 @@ function LevelBadge({ level }: { level: Level }) {
   }
   const labels: Record<Level, string> = { write: 'Full access', read: 'Read only', none: 'No access' }
   return <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-medium whitespace-nowrap ${styles[level]}`}>{labels[level]}</span>
+}
+
+function NavItemLink({ item, onSelect, className }: { item: MenuItem; onSelect: (id: string) => void; className: string }) {
+  if (item.id) {
+    return (
+      <button type="button" role="menuitem" onClick={() => onSelect(item.id!)} className={className}>
+        <MenuItemBody item={item} />
+      </button>
+    )
+  }
+  if (item.to) {
+    return (
+      <Link to={item.to} role="menuitem" onClick={() => onSelect('')} className={className}>
+        <MenuItemBody item={item} />
+      </Link>
+    )
+  }
+  return (
+    <a href={item.href} target="_blank" rel="noreferrer" role="menuitem" onClick={() => onSelect('')} className={className}>
+      <MenuItemBody item={item} />
+    </a>
+  )
+}
+
+function MenuItemBody({ item }: { item: MenuItem }) {
+  return (
+    <>
+      <span className="block text-sm font-semibold">{item.label}</span>
+      <span className="mt-0.5 block text-xs leading-relaxed text-text-muted">{item.description}</span>
+    </>
+  )
+}
+
+function NavDropdown({ label, items, onSelect }: { label: string; items: MenuItem[]; onSelect: (id: string) => void }) {
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  // Close on outside click or Escape.
+  useEffect(() => {
+    if (!open) return
+    const onPointer = (e: MouseEvent) => {
+      if (!ref.current?.contains(e.target as Node)) setOpen(false)
+    }
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onPointer)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onPointer)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+
+  return (
+    <div ref={ref} className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+      <button
+        type="button"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="inline-flex items-center gap-1 rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
+      >
+        {label}
+        <ChevronDown className={`size-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} aria-hidden />
+      </button>
+      <div
+        role="menu"
+        className={`absolute top-full left-1/2 z-50 mt-2 w-80 -translate-x-1/2 rounded-xl border border-border bg-surface p-2 shadow-2xl shadow-black/10 transition duration-200 ${
+          open ? 'visible translate-y-0 opacity-100' : 'invisible -translate-y-1 opacity-0'
+        }`}
+      >
+        {items.map((item) => (
+          <NavItemLink
+            key={item.label}
+            item={item}
+            onSelect={(id) => {
+              setOpen(false)
+              if (id) onSelect(id)
+            }}
+            className="block w-full rounded-lg px-3 py-2.5 text-left transition-colors hover:bg-surface-muted focus-visible:bg-surface-muted focus-visible:outline-none"
+          />
+        ))}
+      </div>
+    </div>
+  )
 }
 
 function HeroPreview() {
@@ -190,7 +286,7 @@ function HeroPreview() {
             <span className="size-2.5 rounded-full bg-warning/70" />
             <span className="size-2.5 rounded-full bg-success/70" />
           </div>
-          <span className="text-xs text-text-muted">Pipeline · Q4</span>
+          <span className="text-xs text-text-muted">Pipeline</span>
         </div>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {columns.map((col) => (
@@ -212,7 +308,7 @@ function HeroPreview() {
         </div>
       </div>
       <div className="landing-float absolute -top-5 -left-3 hidden rounded-xl border border-border bg-surface px-4 py-3 shadow-xl sm:block">
-        <p className="text-[11px] text-text-muted">Open deal value</p>
+        <p className="text-[11px] text-text-muted">Open pipeline</p>
         <p className="text-lg font-semibold">USD 195k</p>
       </div>
       <div className="landing-float-slow absolute -right-3 -bottom-6 hidden items-center gap-2 rounded-xl border border-border bg-surface px-4 py-3 shadow-xl sm:flex">
@@ -239,7 +335,7 @@ export function LandingPage() {
 
   const navigateTo = (id: string) => {
     setMenuOpen(false)
-    scrollToSection(id)
+    if (id) scrollToSection(id)
   }
 
   return (
@@ -252,22 +348,14 @@ export function LandingPage() {
           scrolled || menuOpen ? 'border-b border-border/70 bg-background/85 shadow-sm backdrop-blur-md' : 'bg-transparent'
         }`}
       >
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
           <Link to="/" aria-label="NexaCRM home" className="shrink-0">
             <Logo />
           </Link>
 
           <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
-            {NAV_LINKS.map((link) => (
-              <button
-                key={link.id}
-                type="button"
-                onClick={() => navigateTo(link.id)}
-                className="rounded-md px-3 py-2 text-sm text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary"
-              >
-                {link.label}
-              </button>
-            ))}
+            <NavDropdown label="Product" items={PRODUCT_MENU} onSelect={navigateTo} />
+            <NavDropdown label="Resources" items={RESOURCES_MENU} onSelect={navigateTo} />
           </nav>
 
           <div className="flex items-center gap-2">
@@ -291,14 +379,22 @@ export function LandingPage() {
         </div>
 
         {menuOpen && (
-          <div id="mobile-menu" className="border-t border-border bg-background/95 backdrop-blur-md md:hidden">
-            <nav aria-label="Mobile" className="mx-auto flex max-w-6xl flex-col px-4 py-3">
-              {NAV_LINKS.map((link) => (
-                <button key={link.id} type="button" onClick={() => navigateTo(link.id)} className="rounded-md px-3 py-3 text-left text-sm font-medium hover:bg-surface-muted">
-                  {link.label}
-                </button>
+          <div id="mobile-menu" className="max-h-[calc(100vh-4rem)] overflow-y-auto border-t border-border bg-background/95 backdrop-blur-md md:hidden">
+            <nav aria-label="Mobile" className="mx-auto max-w-6xl px-4 py-4">
+              {[{ title: 'Product', items: PRODUCT_MENU }, { title: 'Resources', items: RESOURCES_MENU }].map((group) => (
+                <div key={group.title} className="mb-3">
+                  <p className="px-3 pb-1 text-xs font-semibold tracking-wide text-text-muted uppercase">{group.title}</p>
+                  {group.items.map((item) => (
+                    <NavItemLink
+                      key={item.label}
+                      item={item}
+                      onSelect={navigateTo}
+                      className="block w-full rounded-md px-3 py-2.5 text-left hover:bg-surface-muted"
+                    />
+                  ))}
+                </div>
               ))}
-              <Link to="/login" onClick={() => setMenuOpen(false)} className="rounded-md px-3 py-3 text-sm font-medium text-text-secondary hover:bg-surface-muted">
+              <Link to="/login" onClick={() => setMenuOpen(false)} className="block rounded-md px-3 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-muted">
                 Sign in
               </Link>
             </nav>
@@ -313,17 +409,17 @@ export function LandingPage() {
           <div className="mx-auto max-w-4xl text-center">
             <Reveal>
               <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface/80 px-3.5 py-1.5 text-xs font-medium text-text-secondary shadow-sm backdrop-blur">
-                <Zap className="size-3.5 text-warning" aria-hidden /> Full-stack CRM for modern sales teams
+                <Zap className="size-3.5 text-warning" aria-hidden /> A SaaS CRM for the full customer lifecycle
               </span>
             </Reveal>
             <Reveal delay={80}>
               <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
-                Run your entire sales pipeline in <span className="bg-gradient-to-r from-primary to-info bg-clip-text text-transparent">one place</span>
+                Manage every customer from first enquiry to <span className="bg-gradient-to-r from-primary to-info bg-clip-text text-transparent">closed deal</span>
               </h1>
             </Reveal>
             <Reveal delay={160}>
               <p className="mx-auto mt-6 max-w-2xl text-pretty text-base leading-relaxed text-text-secondary sm:text-lg">
-                NexaCRM tracks leads, companies, contacts, deals, and tasks, with role-based access enforced on the server. Know what needs attention today and where revenue is heading.
+                NexaCRM keeps leads, companies, contacts, deals, and tasks in one centralized workspace, so nothing lives in spreadsheets or scattered inboxes.
               </p>
             </Reveal>
             <Reveal delay={240}>
@@ -356,8 +452,37 @@ export function LandingPage() {
           </div>
         </section>
 
+        {/* What is a SaaS CRM */}
+        <section className="px-4 py-20 sm:px-6 sm:py-24">
+          <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+            <Reveal>
+              <Eyebrow>What is a SaaS CRM?</Eyebrow>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">One source of truth for every customer relationship</h2>
+              <p className="mt-5 leading-relaxed text-text-secondary">
+                A SaaS CRM is a cloud-based platform that organizations use to manage customer relationships, sales activity, and team performance. It replaces scattered spreadsheets and disconnected tools with a single system, available from any browser.
+              </p>
+              <p className="mt-4 leading-relaxed text-text-secondary">
+                NexaCRM focuses on the sales side of that job: capturing leads, assigning them to people, moving deals through a pipeline, and reporting on the results.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
+                <p className="text-sm font-semibold">The customer journey</p>
+                <ol className="mt-6 space-y-3">
+                  {LIFECYCLE.map((stage, i) => (
+                    <li key={stage} className="flex items-center gap-4">
+                      <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-semibold text-primary">{i + 1}</span>
+                      <span className="flex-1 rounded-lg bg-surface-muted px-4 py-2.5 text-sm font-medium">{stage}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
         {/* Stats */}
-        <section className="px-4 py-20 sm:px-6">
+        <section className="px-4 pb-20 sm:px-6">
           <div className="mx-auto grid max-w-6xl grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border lg:grid-cols-4">
             {STATS.map((stat, i) => (
               <Reveal key={stat.label} delay={i * 80} className="bg-surface p-6 sm:p-8">
@@ -369,16 +494,16 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* Features */}
-        <section id="features" className="scroll-mt-20 px-4 py-20 sm:px-6 sm:py-24">
+        {/* Modules */}
+        <section id="modules" className="scroll-mt-20 px-4 py-20 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal className="mx-auto max-w-2xl text-center">
-              <Eyebrow>Features</Eyebrow>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Every part of the sales process, connected</h2>
-              <p className="mt-4 text-text-secondary">Seven CRM modules share the same data, so a deal always knows its company, its contacts, and its open tasks.</p>
+              <Eyebrow>Modules</Eyebrow>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Every sales module, connected</h2>
+              <p className="mt-4 text-text-secondary">The modules share the same data, so a deal always knows its company, its contacts, and its open tasks.</p>
             </Reveal>
             <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {FEATURES.map(({ icon: Icon, title, text }, i) => (
+              {MODULES.map(({ icon: Icon, title, text }, i) => (
                 <Reveal key={title} delay={(i % 3) * 90}>
                   <article className="group h-full rounded-xl border border-border bg-surface p-6 transition duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
                     <span className="flex size-11 items-center justify-center rounded-lg bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-white">
@@ -394,20 +519,19 @@ export function LandingPage() {
                   <Command className="size-5 text-primary" aria-hidden />
                   <h3 className="mt-4 font-semibold">Keyboard first</h3>
                   <p className="mt-2 text-sm leading-relaxed text-text-secondary">
-                    Press <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-xs">Ctrl</kbd> + <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-xs">K</kbd> to jump to any page, and use the dark theme on long sessions.
+                    Press <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-xs">Ctrl</kbd> + <kbd className="rounded border border-border bg-surface px-1.5 py-0.5 text-xs">K</kbd> to jump to any page from anywhere in the app.
                   </p>
-                  <Moon className="mt-4 size-4 text-text-muted" aria-hidden />
                 </article>
               </Reveal>
             </div>
           </div>
         </section>
 
-        {/* Workflow */}
-        <section id="workflow" className="scroll-mt-20 border-y border-border bg-surface-muted/40 px-4 py-20 sm:px-6 sm:py-24">
+        {/* Lifecycle / workflow */}
+        <section id="lifecycle" className="scroll-mt-20 border-y border-border bg-surface-muted/40 px-4 py-20 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal className="mx-auto max-w-2xl text-center">
-              <Eyebrow>Workflow</Eyebrow>
+              <Eyebrow>Sales lifecycle</Eyebrow>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">From first contact to closed deal</h2>
             </Reveal>
             <ol className="relative mt-16 grid gap-10 md:grid-cols-4 md:gap-6">
@@ -431,10 +555,10 @@ export function LandingPage() {
         <section id="access" className="scroll-mt-20 px-4 py-20 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal className="mx-auto max-w-2xl text-center">
-              <Eyebrow>Access control</Eyebrow>
+              <Eyebrow>Roles & access</Eyebrow>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Each role sees exactly what it needs</h2>
               <p className="mt-4 text-text-secondary">
-                Permissions are checked by the API on every protected request, so hiding a button is never the only safeguard.
+                Admins, managers, sales agents, and viewers each get a defined level of access. The API checks it on every protected request.
               </p>
             </Reveal>
 
@@ -471,16 +595,16 @@ export function LandingPage() {
           </div>
         </section>
 
-        {/* Stack */}
-        <section id="stack" className="scroll-mt-20 border-t border-border bg-surface-muted/40 px-4 py-20 sm:px-6 sm:py-24">
+        {/* Platform */}
+        <section id="platform" className="scroll-mt-20 border-t border-border bg-surface-muted/40 px-4 py-20 sm:px-6 sm:py-24">
           <div className="mx-auto max-w-6xl">
             <Reveal className="mx-auto max-w-2xl text-center">
-              <Eyebrow>Under the hood</Eyebrow>
+              <Eyebrow>Platform</Eyebrow>
               <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">Built as a complete full-stack system</h2>
               <p className="mt-4 text-text-secondary">A typed frontend, a layered API, and a relational data model, wired together end to end.</p>
             </Reveal>
             <div className="mt-14 grid gap-5 sm:grid-cols-2">
-              {STACK_LAYERS.map(({ icon: Icon, title, items }, i) => (
+              {PLATFORM_LAYERS.map(({ icon: Icon, title, items }, i) => (
                 <Reveal key={title} delay={(i % 2) * 100}>
                   <div className="h-full rounded-xl border border-border bg-surface p-6">
                     <div className="flex items-center gap-3">
@@ -504,11 +628,40 @@ export function LandingPage() {
           </div>
         </section>
 
+        {/* Roadmap */}
+        <section id="roadmap" className="scroll-mt-20 px-4 py-20 sm:px-6 sm:py-24">
+          <div className="mx-auto max-w-6xl">
+            <Reveal className="mx-auto max-w-2xl text-center">
+              <Eyebrow>Roadmap</Eyebrow>
+              <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">What we are building next</h2>
+              <p className="mt-4 text-text-secondary">These capabilities are planned and not yet available in the current release.</p>
+            </Reveal>
+            <div className="mt-14 grid gap-5 sm:grid-cols-2">
+              {ROADMAP.map(({ icon: Icon, title, text }, i) => (
+                <Reveal key={title} delay={(i % 2) * 100}>
+                  <article className="flex h-full gap-4 rounded-xl border border-dashed border-border bg-surface p-6">
+                    <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-surface-muted text-text-muted">
+                      <Icon className="size-5" aria-hidden />
+                    </span>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold">{title}</h3>
+                        <span className="rounded-full bg-warning/15 px-2 py-0.5 text-[11px] font-medium text-warning">Planned</span>
+                      </div>
+                      <p className="mt-2 text-sm leading-relaxed text-text-secondary">{text}</p>
+                    </div>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Final CTA */}
-        <section className="px-4 py-20 sm:px-6 sm:py-24">
+        <section className="px-4 pb-20 sm:px-6 sm:pb-24">
           <Reveal className="mx-auto max-w-4xl">
             <div className="relative overflow-hidden rounded-3xl border border-border bg-surface px-6 py-16 text-center shadow-xl shadow-black/5 sm:px-12">
-              <div aria-hidden className="landing-glow pointer-events-none absolute -top-24 left-1/2 -z-0 size-96 -translate-x-1/2 rounded-full bg-primary/25 blur-3xl" />
+              <div aria-hidden className="landing-glow pointer-events-none absolute -top-24 left-1/2 size-96 -translate-x-1/2 rounded-full bg-primary/25 blur-3xl" />
               <div className="relative">
                 <span className="mx-auto flex size-12 items-center justify-center rounded-xl bg-primary text-white shadow-lg shadow-primary/30">
                   <LayoutDashboard className="size-6" aria-hidden />

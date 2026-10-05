@@ -1,0 +1,90 @@
+/* Auth screen motion. Loaded only by the auth layout. */
+
+@keyframes auth-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+
+.auth-rise {
+  animation: auth-rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.auth-rise-1 {
+  animation-delay: 0.1s;
+}
+
+.auth-rise-2 {
+  animation-delay: 0.2s;
+}
+
+.auth-rise-3 {
+  animation-delay: 0.3s;
+}
+
+@keyframes auth-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+.auth-float {
+  animation: auth-float 7s ease-in-out infinite;
+}
+
+.auth-float-slow {
+  animation: auth-float 9s ease-in-out -4s infinite;
+}
+
+@keyframes auth-grid-drift {
+  to {
+    background-position: 48px 48px;
+  }
+}
+
+.auth-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at center, black 35%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 35%, transparent 80%);
+  animation: auth-grid-drift 18s linear infinite;
+}
+
+@keyframes auth-blob {
+  to {
+    transform: translate(40px, -30px) scale(1.15);
+  }
+}
+
+.auth-blob {
+  animation: auth-blob 14s ease-in-out infinite alternate;
+}
+
+@keyframes auth-bar {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+.auth-bar {
+  transform-origin: left;
+  animation: auth-bar 2.2s cubic-bezier(0.2, 0.7, 0.2, 1) 0.4s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-rise,
+  .auth-float,
+  .auth-float-slow,
+  .auth-grid,
+  .auth-blob,
+  .auth-bar {
+    animation: none;
+  }
+}
