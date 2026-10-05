@@ -4,7 +4,7 @@ A full-stack SaaS CRM with auth, role-based permissions, dashboard analytics, le
 
 ## 🌐 Live demo
 
-**https://YOUR-VERCEL-APP.vercel.app** _(replace with your deployed URL)_
+**https://nexa-saas-crm.vercel.app/**
 
 Demo logins (password for all: `Password123!`):
 
