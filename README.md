@@ -1,51 +1,41 @@
 # NexaCRM
 
-A full-stack SaaS CRM with auth, role-based permissions, dashboard analytics, leads, companies, contacts, deals, a kanban pipeline, tasks, and an activity feed.
+A full-stack SaaS CRM with authentication, role-based permissions, dashboard analytics, leads, companies, contacts, deals, a kanban pipeline, tasks, and an activity feed.
 
-## 🌐 Live demo
+## Status
 
-**https://nexa-saas-crm.vercel.app/**
-
-Demo logins (password for all: `Password123!`):
-
-| Role | Email |
+| Component | Status |
 | --- | --- |
-| Admin | `admin@nexacrm.dev` |
-| Manager | `manager@nexacrm.dev` |
-| Sales agent | `agent@nexacrm.dev` |
-| Viewer | `viewer@nexacrm.dev` |
+| Frontend (React + Vite) | ✅ Live: https://nexa-saas-crm.vercel.app/ |
+| Backend (Express + Prisma + PostgreSQL) | 🚧 Work in progress, coming soon |
 
-> Hosted on Render's free tier — the first request after idle can take ~1 minute while the server wakes up.
+The frontend UI is complete and deployed. Live data, authentication, and API integration are being finalized with the backend, which is not yet publicly available.
 
 ## Tech stack
 
-- **Client:** React 19, Vite, TypeScript, Tailwind CSS v4, TanStack Query, React Router, Recharts, React Hook Form + Zod
-- **Server:** Node.js, Express 5, TypeScript, Prisma 7, PostgreSQL, JWT auth (access + rotating refresh tokens), Helmet, Zod validation
-- **Features:** multi-role RBAC (admin / manager / sales agent / viewer), org-scoped data, server-side pagination + search + filters, dark mode, command palette (Ctrl+K), responsive down to phone widths
+- **Frontend:** React 19, Vite, TypeScript, Tailwind CSS v4, TanStack Query, React Router, Recharts, React Hook Form + Zod
+- **Backend (planned):** Node.js, Express 5, TypeScript, Prisma 7, PostgreSQL, JWT authentication, Helmet, Zod validation
+- **Features:** role-based access (admin / manager / sales agent / viewer), dark mode, command palette (Ctrl+K), responsive layout down to phone widths
 
-## Run locally
+## Run the frontend locally
 
-Requirements: Node 20+, PostgreSQL.
+Requirements: Node 20+.
 
 ```bash
-# 1. Server
-cd server
-cp .env.example .env        # fill in DATABASE_URL + JWT secrets
-npm install
-npx prisma migrate dev
-npm run seed                # demo org + users + data
-npm run dev                 # API on http://localhost:4000
-
-# 2. Client (new terminal)
 cd client
 npm install
-npm run dev                 # app on http://localhost:5173
+npm run dev          # app on http://localhost:5173
 ```
 
-## Deploy your own
+## Backend (coming soon)
 
-One click with the included [`render.yaml`](render.yaml) blueprint (web service + free PostgreSQL):
+The API server is under active development and will be documented here when it is released. The `server/` folder contains the work in progress and is not yet ready for production use.
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/YOUR-GITHUB-USER/saas-crm)
+## Roadmap
 
-In production the Express server serves the built client, so everything runs behind a single URL.
+- [x] Frontend pages and layout
+- [x] Frontend deployment on Vercel
+- [ ] Backend API and database
+- [ ] Authentication and role-based access wired to the frontend
+- [ ] Public backend deployment
+- [ ] Automated tests
