@@ -4,7 +4,7 @@ A full-stack SaaS CRM with auth, role-based permissions, dashboard analytics, le
 
 ## 🌐 Live demo
 
-**https://nexacrm.onrender.com**
+**https://YOUR-VERCEL-APP.vercel.app** _(replace with your deployed URL)_
 
 Demo logins (password for all: `Password123!`):
 
@@ -46,6 +46,6 @@ npm run dev                 # app on http://localhost:5173
 
 One click with the included [`render.yaml`](render.yaml) blueprint (web service + free PostgreSQL):
 
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/rahulchaurasiya722003/saas-crm)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/YOUR-GITHUB-USER/saas-crm)
 
 In production the Express server serves the built client, so everything runs behind a single URL.

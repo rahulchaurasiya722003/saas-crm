@@ -22,7 +22,7 @@ services:
           name: nexacrm-db
           property: connectionString
       - key: CLIENT_URL
-        value: https://nexacrm.onrender.com
+        sync: false
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET
