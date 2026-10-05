@@ -1,41 +1,76 @@
 # NexaCRM
 
-A full-stack SaaS CRM with authentication, role-based permissions, dashboard analytics, leads, companies, contacts, deals, a kanban pipeline, tasks, and an activity feed.
+A full-stack SaaS CRM for managing leads, companies, contacts, deals, tasks, and activity, with role-based access and dashboard analytics.
 
-## Status
+**Live frontend:** https://nexa-saas-crm.vercel.app/
 
-| Component | Status |
-| --- | --- |
-| Frontend (React + Vite) | ✅ Live: https://nexa-saas-crm.vercel.app/ |
-| Backend (Express + Prisma + PostgreSQL) | 🚧 Work in progress, coming soon |
+> **Status:** The frontend is complete and deployed. The backend API is a work in progress and not yet publicly available.
 
-The frontend UI is complete and deployed. Live data, authentication, and API integration are being finalized with the backend, which is not yet publicly available.
+---
+
+## Features
+
+- Dashboard with KPIs and charts
+- Leads, companies, and contacts management
+- Deals with a kanban pipeline view
+- Tasks and an activity feed
+- Role-based access: admin, manager, sales agent, viewer
+- Command palette (`Ctrl+K`) and dark mode
+- Responsive layout from phone to desktop
 
 ## Tech stack
 
-- **Frontend:** React 19, Vite, TypeScript, Tailwind CSS v4, TanStack Query, React Router, Recharts, React Hook Form + Zod
-- **Backend (planned):** Node.js, Express 5, TypeScript, Prisma 7, PostgreSQL, JWT authentication, Helmet, Zod validation
-- **Features:** role-based access (admin / manager / sales agent / viewer), dark mode, command palette (Ctrl+K), responsive layout down to phone widths
+| Layer | Technologies |
+| --- | --- |
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS v4, TanStack Query, React Router, Recharts, React Hook Form, Zod |
+| Backend (in progress) | Node.js, Express 5, TypeScript, Prisma 7, PostgreSQL, JWT authentication, Zod |
+| Deployment | Vercel (frontend) |
 
-## Run the frontend locally
+## Project structure
 
-Requirements: Node 20+.
+```
+saas-crm/
+├── client/     # React frontend (Vite)
+├── server/     # Express API with Prisma (in progress)
+└── render.yaml # Render deployment blueprint for the backend
+```
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 20 or later
+- npm
+
+### Run the frontend locally
+
+```bash
+git clone https://github.com/rahulchaurasiya722003/saas-crm.git
+cd saas-crm/client
+npm install
+npm run dev
+```
+
+The app runs at http://localhost:5173.
+
+### Build for production
 
 ```bash
 cd client
-npm install
-npm run dev          # app on http://localhost:5173
+npm run build
 ```
 
-## Backend (coming soon)
-
-The API server is under active development and will be documented here when it is released. The `server/` folder contains the work in progress and is not yet ready for production use.
+The output is written to `client/dist`.
 
 ## Roadmap
 
 - [x] Frontend pages and layout
 - [x] Frontend deployment on Vercel
-- [ ] Backend API and database
-- [ ] Authentication and role-based access wired to the frontend
+- [ ] Backend API and PostgreSQL database
+- [ ] Authentication wired to the frontend
 - [ ] Public backend deployment
 - [ ] Automated tests
+
+## Contributing
+
+This project is under active development. Issues and suggestions are welcome.
