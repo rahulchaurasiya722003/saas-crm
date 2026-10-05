@@ -8,6 +8,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
   JWT_ACCESS_SECRET: z.string().min(16),
   JWT_REFRESH_SECRET: z.string().min(16),
+  // Optional. Google sign-in is disabled until this is set.
+  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
 })
 
 const parsed = envSchema.safeParse(process.env)

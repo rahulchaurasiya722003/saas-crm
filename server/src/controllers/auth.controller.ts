@@ -4,7 +4,7 @@ import { requireAuth } from '../middleware/auth'
 import * as authService from '../services/auth.service'
 import { sendSuccess } from '../utils/response'
 import { REFRESH_TTL_MS } from '../utils/tokens'
-import { loginSchema, registerSchema } from '../validators/auth'
+import { googleSchema, loginSchema, registerSchema } from '../validators/auth'
 
 const COOKIE = 'refresh_token'
 const cookieOptions: CookieOptions = {
@@ -26,6 +26,11 @@ export const register = async (req: Request, res: Response) =>
 export const login = async (req: Request, res: Response) => {
   const { email, password } = loginSchema.parse(req.body)
   return respond(res, await authService.login(email, password), 'Signed in')
+}
+
+export const google = async (req: Request, res: Response) => {
+  const { credential } = googleSchema.parse(req.body)
+  return respond(res, await authService.googleLogin(credential), 'Signed in with Google')
 }
 
 export const refresh = async (req: Request, res: Response) =>

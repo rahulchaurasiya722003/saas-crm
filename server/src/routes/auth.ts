@@ -15,6 +15,7 @@ const limiter = rateLimit({
 
 authRouter.post('/register', limiter, c.register)
 authRouter.post('/login', limiter, c.login)
+authRouter.post('/google', limiter, c.google)
 authRouter.post('/refresh', c.refresh)
 authRouter.post('/logout', c.logout)
 authRouter.get('/me', authenticate, c.me)

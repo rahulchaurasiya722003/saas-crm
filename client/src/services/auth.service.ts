@@ -19,6 +19,11 @@ export async function register(input: RegisterInput) {
   return res.data.data
 }
 
+export async function googleSignIn(credential: string) {
+  const res = await api.post<ApiResponse<SessionData>>('/auth/google', { credential })
+  return res.data.data
+}
+
 export async function logout() {
   await api.post('/auth/logout')
 }

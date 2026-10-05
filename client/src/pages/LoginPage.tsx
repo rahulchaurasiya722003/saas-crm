@@ -19,7 +19,7 @@ type Values = z.infer<typeof schema>
 const DEMO = { email: 'admin@nexacrm.dev', password: 'Password123!' }
 
 export function LoginPage() {
-  const { login } = useAuth()
+  const { login, loginWithGoogle } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
   const [formError, setFormError] = useState<string | null>(null)
@@ -44,7 +44,15 @@ export function LoginPage() {
       subtitle="Sign in to your NexaCRM workspace."
       footer={{ text: "Don't have an account?", linkLabel: 'Create one', to: '/register' }}
     >
-      <GoogleSignInButton label="Sign in with Google" />
+      <GoogleSignInButton
+        label="Sign in with Google"
+        mode="signin"
+        onCredential={async (credential) => {
+          await loginWithGoogle(credential)
+          const from = (location.state as { from?: string } | null)?.from
+          navigate(from ?? '/dashboard', { replace: true })
+        }}
+      />
       <form onSubmit={onSubmit} noValidate className="space-y-4">
         <FormField label="Email" type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
         <FormField label="Password" type="password" revealable autoComplete="current-password" error={errors.password?.message} {...register('password')} />

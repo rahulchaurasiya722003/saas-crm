@@ -11,6 +11,7 @@ interface AuthContextValue {
   status: Status
   login: (email: string, password: string) => Promise<void>
   register: (input: authService.RegisterInput) => Promise<void>
+  loginWithGoogle: (credential: string) => Promise<void>
   logout: () => Promise<void>
 }
 
@@ -48,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       status,
       login: async (email, password) => start(await authService.login(email, password)),
+      loginWithGoogle: async (credential) => start(await authService.googleSignIn(credential)),
       register: async (input) => start(await authService.register(input)),
       logout: async () => {
         try {

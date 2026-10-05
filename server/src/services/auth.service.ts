@@ -1,4 +1,6 @@
 import bcrypt from 'bcryptjs'
+import { randomBytes } from 'node:crypto'
+import { env } from '../config/env'
 import type { User } from '../generated/prisma/client'
 import { prisma } from '../lib/prisma'
 import { HttpError } from '../utils/response'
@@ -66,6 +68,54 @@ export async function login(email: string, password: string) {
   if (!user || !ok) throw new HttpError(401, 'Invalid email or password')
   if (user.status === 'DISABLED') throw new HttpError(403, 'This account has been disabled')
   await prisma.user.update({ where: { id: user.id }, data: { lastActiveAt: new Date() } })
+  return issueSession(user)
+}
+
+interface GoogleTokenInfo {
+  aud?: string
+  email?: string
+  email_verified?: boolean | string
+  given_name?: string
+  family_name?: string
+}
+
+// Verifies a Google ID token and signs the user in. Creates the account on first sign-in.
+export async function googleLogin(credential: string) {
+  if (!env.GOOGLE_CLIENT_ID) throw new HttpError(503, 'Google sign-in is not configured')
+
+  // Google validates the token's signature. We then check it was issued for this app.
+  const res = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`)
+  if (!res.ok) throw new HttpError(401, 'Google sign-in failed. Please try again.')
+  const info = (await res.json()) as GoogleTokenInfo
+  if (info.aud !== env.GOOGLE_CLIENT_ID) throw new HttpError(401, 'Google sign-in failed. Please try again.')
+
+  const verified = info.email_verified === true || info.email_verified === 'true'
+  if (!info.email || !verified) throw new HttpError(403, 'Your Google email address must be verified')
+  const email = info.email.toLowerCase()
+
+  const existing = await prisma.user.findFirst({ where: { email } })
+  if (existing) {
+    if (existing.status === 'DISABLED') throw new HttpError(403, 'This account has been disabled')
+    await prisma.user.update({ where: { id: existing.id }, data: { lastActiveAt: new Date() } })
+    return issueSession(existing)
+  }
+
+  // New Google users get their own organization and become its admin, the same as email sign-up.
+  const firstName = info.given_name?.trim() || 'Google'
+  const lastName = info.family_name?.trim() || 'User'
+  const orgName = `${firstName}'s Workspace`
+  const slug = `${slugify(orgName) || 'org'}-${randomBytes(3).toString('hex')}`
+  const user = await prisma.user.create({
+    data: {
+      email,
+      // Random, unusable password: Google accounts sign in through Google only.
+      passwordHash: await bcrypt.hash(randomBytes(32).toString('hex'), BCRYPT_ROUNDS),
+      firstName,
+      lastName,
+      role: 'ADMIN',
+      organization: { create: { name: orgName, slug } },
+    },
+  })
   return issueSession(user)
 }
 

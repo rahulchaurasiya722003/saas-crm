@@ -1,36 +1,128 @@
-// Google sign-in button. It stays disabled until VITE_GOOGLE_CLIENT_ID is set in client/.env,
-// because Google requires a client ID from your own Google Cloud project.
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined
+import { useEffect, useRef, useState } from 'react'
+import { getErrorMessage } from '../../lib/api'
+import { useTheme } from '../../store/theme'
 
-function GoogleIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="size-5" aria-hidden>
-      <path fill="#EA4335" d="M12 10.2v3.9h5.5c-.2 1.4-1.6 4-5.5 4-3.3 0-6-2.7-6-6.1s2.7-6.1 6-6.1c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.3 14.6 2.4 12 2.4 6.7 2.4 2.4 6.7 2.4 12s4.3 9.6 9.6 9.6c5.5 0 9.2-3.9 9.2-9.4 0-.6-.1-1.1-.2-1.6H12z" />
-      <path fill="#34A853" d="M3.9 7.5l3.2 2.3C8 7.8 9.8 6.5 12 6.5c1.9 0 3.1.8 3.8 1.5l2.6-2.5C16.8 3.8 14.6 2.9 12 2.9c-3.7 0-6.9 2.1-8.1 4.6z" />
-      <path fill="#FBBC05" d="M12 21.6c2.5 0 4.7-.8 6.2-2.3l-2.9-2.4c-.8.6-1.9 1-3.3 1-3.9 0-5.3-2.6-5.5-3.9l-3.2 2.5c1.2 2.5 4.4 5.1 8.7 5.1z" />
-      <path fill="#4285F4" d="M21.2 12.2c0-.6-.1-1.1-.2-1.6H12v3.9h5.5c-.3 1.3-1 2.3-2.1 3l2.9 2.4c1.7-1.6 2.9-4 2.9-7.7z" />
-    </svg>
-  )
+// Google Identity Services. Set VITE_GOOGLE_CLIENT_ID in client/.env to enable.
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID as string | undefined
+const GIS_SCRIPT_URL = 'https://accounts.google.com/gsi/client'
+
+interface GoogleIdApi {
+  initialize(config: { client_id: string; callback: (response: { credential: string }) => void }): void
+  renderButton(parent: HTMLElement, options: Record<string, unknown>): void
 }
 
-export function GoogleSignInButton({ label }: { label: string }) {
-  const configured = Boolean(GOOGLE_CLIENT_ID)
+declare global {
+  interface Window {
+    google?: { accounts: { id: GoogleIdApi } }
+  }
+}
+
+let scriptRequest: Promise<void> | null = null
+
+// Loads the Google script once, however many buttons are on screen.
+function loadGoogleScript() {
+  if (window.google?.accounts?.id) return Promise.resolve()
+  scriptRequest ??= new Promise<void>((resolve, reject) => {
+    const script = document.createElement('script')
+    script.src = GIS_SCRIPT_URL
+    script.async = true
+    script.onload = () => resolve()
+    script.onerror = () => {
+      scriptRequest = null
+      reject(new Error('Could not load Google sign-in. Check your connection and try again.'))
+    }
+    document.head.appendChild(script)
+  })
+  return scriptRequest
+}
+
+interface GoogleSignInButtonProps {
+  label: string
+  mode: 'signin' | 'signup'
+  onCredential: (credential: string) => Promise<void>
+}
+
+export function GoogleSignInButton({ label, mode, onCredential }: GoogleSignInButtonProps) {
+  const { resolved } = useTheme()
+  const container = useRef<HTMLDivElement>(null)
+  const handler = useRef(onCredential)
+  const [error, setError] = useState<string | null>(null)
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    handler.current = onCredential
+  }, [onCredential])
+
+  // Renders Google's own button, re-rendered when the theme changes so it matches.
+  useEffect(() => {
+    if (!GOOGLE_CLIENT_ID) return
+    let cancelled = false
+
+    loadGoogleScript()
+      .then(() => {
+        if (cancelled || !container.current || !window.google) return
+        const id = window.google.accounts.id
+        id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: ({ credential }) => {
+            setError(null)
+            handler.current(credential).catch((e: unknown) => {
+              setError(getErrorMessage(e, 'Google sign-in failed. Please try again.'))
+            })
+          },
+        })
+        container.current.innerHTML = ''
+        id.renderButton(container.current, {
+          theme: resolved === 'dark' ? 'filled_black' : 'outline',
+          size: 'large',
+          shape: 'rectangular',
+          text: mode === 'signup' ? 'signup_with' : 'signin_with',
+          logo_alignment: 'left',
+          width: Math.min(container.current.offsetWidth || 320, 400),
+        })
+        setReady(true)
+      })
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : 'Google sign-in failed.'))
+
+    return () => {
+      cancelled = true
+    }
+  }, [resolved, mode])
+
+  const divider = (
+    <div className="my-5 flex items-center gap-3 text-xs text-text-muted">
+      <span className="h-px flex-1 bg-border" />
+      or continue with email
+      <span className="h-px flex-1 bg-border" />
+    </div>
+  )
+
+  if (!GOOGLE_CLIENT_ID) {
+    return (
+      <div>
+        <button
+          type="button"
+          disabled
+          title="Set VITE_GOOGLE_CLIENT_ID in client/.env to enable Google sign-in"
+          className="inline-flex h-11 w-full items-center justify-center rounded-md border border-border bg-surface text-sm font-medium opacity-60"
+        >
+          {label}
+        </button>
+        {divider}
+      </div>
+    )
+  }
+
   return (
     <div>
-      <button
-        type="button"
-        disabled={!configured}
-        title={configured ? undefined : 'Set VITE_GOOGLE_CLIENT_ID in client/.env to enable Google sign-in'}
-        className="inline-flex h-11 w-full items-center justify-center gap-3 rounded-md border border-border bg-surface text-sm font-medium transition duration-150 hover:bg-surface-muted active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60"
-      >
-        <GoogleIcon />
-        {label}
-      </button>
-      <div className="my-5 flex items-center gap-3 text-xs text-text-muted">
-        <span className="h-px flex-1 bg-border" />
-        or continue with email
-        <span className="h-px flex-1 bg-border" />
-      </div>
+      <div ref={container} className="flex min-h-11 w-full justify-center" />
+      {!ready && !error && <p className="mt-2 text-center text-xs text-text-muted">Loading Google sign-in…</p>}
+      {error && (
+        <p role="alert" className="mt-2 rounded-md bg-danger/10 px-3 py-2 text-center text-sm text-danger">
+          {error}
+        </p>
+      )}
+      {divider}
     </div>
   )
 }

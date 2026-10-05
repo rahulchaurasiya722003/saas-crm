@@ -44,7 +44,7 @@ function getStrength(password: string) {
 const SEGMENT_TONE = ['bg-danger', 'bg-warning', 'bg-success']
 
 export function RegisterPage() {
-  const { register: signUp } = useAuth()
+  const { register: signUp, loginWithGoogle } = useAuth()
   const navigate = useNavigate()
   const [formError, setFormError] = useState<string | null>(null)
   const {
@@ -77,7 +77,14 @@ export function RegisterPage() {
       subtitle="Set up your organization and admin account."
       footer={{ text: 'Already have an account?', linkLabel: 'Sign in', to: '/login' }}
     >
-      <GoogleSignInButton label="Sign up with Google" />
+      <GoogleSignInButton
+        label="Sign up with Google"
+        mode="signup"
+        onCredential={async (credential) => {
+          await loginWithGoogle(credential)
+          navigate('/dashboard', { replace: true })
+        }}
+      />
       <form onSubmit={onSubmit} noValidate className="space-y-4">
         <FormField label="Organization name" autoComplete="organization" error={errors.organizationName?.message} {...register('organizationName')} />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
