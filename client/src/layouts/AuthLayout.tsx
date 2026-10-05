@@ -61,14 +61,14 @@ function BrandPanel() {
                 <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md bg-white/15">
                   <Icon className="size-4" aria-hidden />
                 </span>
-                {text}
+                <span className="min-w-0 flex-1 leading-relaxed break-words">{text}</span>
               </li>
             ))}
           </ul>
         </div>
       </div>
 
-      <p className="relative z-10 text-xs text-white/60">Full-stack SaaS CRM · React, Express, Prisma, PostgreSQL</p>
+      <p className="relative z-10 shrink-0 pt-4 text-xs text-white/60">Full-stack SaaS CRM · React, Express, Prisma, PostgreSQL</p>
     </aside>
   )
 }
