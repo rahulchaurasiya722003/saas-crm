@@ -1,0 +1,29 @@
+databases:
+  - name: nexacrm-db
+    plan: free
+
+services:
+  - type: web
+    name: nexacrm
+    runtime: node
+    plan: free
+    # --include=dev because NODE_ENV=production would otherwise skip tsc/vite/tsx.
+    buildCommand: >-
+      cd client && npm ci --include=dev && npm run build &&
+      cd ../server && npm ci --include=dev && npm run build &&
+      npx prisma migrate deploy && npm run seed
+    startCommand: cd server && npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: nexacrm-db
+          property: connectionString
+      - key: CLIENT_URL
+        value: https://nexacrm.onrender.com
+      - key: JWT_ACCESS_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
