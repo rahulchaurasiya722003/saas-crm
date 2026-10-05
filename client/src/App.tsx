@@ -18,6 +18,7 @@ const DealsPage = lazy(() => import('./pages/DealsPage').then((m) => ({ default:
 const PipelinePage = lazy(() => import('./pages/PipelinePage').then((m) => ({ default: m.PipelinePage })))
 const TasksPage = lazy(() => import('./pages/TasksPage').then((m) => ({ default: m.TasksPage })))
 const ActivitiesPage = lazy(() => import('./pages/ActivitiesPage').then((m) => ({ default: m.ActivitiesPage })))
+const PreferencesPage = lazy(() => import('./pages/PreferencesPage').then((m) => ({ default: m.PreferencesPage })))
 const ComingSoonPage = lazy(() => import('./pages/ComingSoonPage').then((m) => ({ default: m.ComingSoonPage })))
 
 const queryClient = new QueryClient({
@@ -47,6 +48,7 @@ function App() {
                     <Route path="pipeline" element={<PipelinePage />} />
                     <Route path="tasks" element={<TasksPage />} />
                     <Route path="activities" element={<ActivitiesPage />} />
+                    <Route path="settings/preferences" element={<PreferencesPage />} />
                     <Route path="*" element={<ComingSoonPage />} />
                   </Route>
                 </Route>

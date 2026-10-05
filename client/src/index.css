@@ -6,11 +6,15 @@
   --background: #f8f9fb;
   --surface: #ffffff;
   --surface-muted: #f1f3f6;
+  --surface-elevated: #ffffff;
+  --input-background: #ffffff;
+  --input-border: #cdd3dc;
   --border: #e3e6eb;
   --text-primary: #12151c;
   --text-secondary: #4a5162;
   --text-muted: #7b8294;
   --primary: #4f46e5;
+  --primary-foreground: #ffffff;
   --success: #16a34a;
   --warning: #d97706;
   --danger: #dc2626;
@@ -22,11 +26,15 @@
   --background: #0d0f14;
   --surface: #151820;
   --surface-muted: #1c2029;
+  --surface-elevated: #1b2029;
+  --input-background: #0d1117;
+  --input-border: #3d4758;
   --border: #272c38;
   --text-primary: #eceef3;
   --text-secondary: #b1b7c6;
   --text-muted: #7f8798;
   --primary: #818cf8;
+  --primary-foreground: #0d0f14;
   --success: #4ade80;
   --warning: #fbbf24;
   --danger: #f87171;
@@ -38,16 +46,29 @@
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-muted: var(--surface-muted);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-input-background: var(--input-background);
+  --color-input-border: var(--input-border);
   --color-border: var(--border);
   --color-text-primary: var(--text-primary);
   --color-text-secondary: var(--text-secondary);
   --color-text-muted: var(--text-muted);
   --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-success: var(--success);
   --color-warning: var(--warning);
   --color-danger: var(--danger);
   --color-info: var(--info);
   --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Applied for a moment after a manual theme switch, so colors blend instead of snapping. */
+.theme-transition,
+.theme-transition * {
+  transition:
+    background-color 200ms ease,
+    color 200ms ease,
+    border-color 200ms ease !important;
 }
 
 @keyframes fade-in {

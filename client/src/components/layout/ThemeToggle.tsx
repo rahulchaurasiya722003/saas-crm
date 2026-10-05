@@ -1,22 +1,23 @@
-import { Monitor, Moon, Sun } from 'lucide-react'
-import { useTheme, type ThemePreference } from '../../store/theme'
+import { Moon, Sun } from 'lucide-react'
+import { useTheme } from '../../store/theme'
 
-const ORDER: ThemePreference[] = ['light', 'dark', 'system']
-const ICONS = { light: Sun, dark: Moon, system: Monitor }
-const LABELS = { light: 'Light', dark: 'Dark', system: 'System' }
-
+// Two modes only. Until the user picks one, the theme follows the device or browser setting.
 export function ThemeToggle() {
-  const { preference, setPreference } = useTheme()
-  const next = ORDER[(ORDER.indexOf(preference) + 1) % ORDER.length]!
-  const Icon = ICONS[preference]
+  const { resolved, setPreference } = useTheme()
+  const isNight = resolved === 'dark'
+  const Icon = isNight ? Moon : Sun
+  const current = isNight ? 'Night' : 'Day'
+  const next = isNight ? 'Day' : 'Night'
+
   return (
     <button
-      onClick={() => setPreference(next)}
-      aria-label={`Theme: ${LABELS[preference]}. Switch to ${LABELS[next]}`}
-      title={`Theme: ${LABELS[preference]}`}
-      className="flex size-9 items-center justify-center rounded-md text-text-secondary hover:bg-surface-muted hover:text-text-primary"
+      type="button"
+      onClick={() => setPreference(isNight ? 'light' : 'dark')}
+      aria-label={`${current} mode. Switch to ${next} mode`}
+      title={`${current} mode. Switch to ${next}`}
+      className="flex size-9 items-center justify-center rounded-md text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary focus-visible:outline-2 focus-visible:outline-primary"
     >
-      <Icon className="size-[18px]" />
+      <Icon className="size-[18px]" aria-hidden />
     </button>
   )
 }

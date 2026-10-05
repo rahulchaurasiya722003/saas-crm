@@ -67,8 +67,6 @@ function BrandPanel() {
           </ul>
         </div>
       </div>
-
-      <p className="relative z-10 shrink-0 pt-4 text-xs text-white/60">Full-stack SaaS CRM · React, Express, Prisma, PostgreSQL</p>
     </aside>
   )
 }

@@ -24,6 +24,7 @@ import {
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { Logo } from '../components/common/Logo'
+import { ThemeToggle } from '../components/layout/ThemeToggle'
 import './landing.css'
 
 const prefersReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -452,6 +453,7 @@ export function LandingPage() {
           </nav>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Link to="/login" className="hidden h-9 items-center rounded-md px-3.5 text-sm font-medium text-text-secondary transition-colors hover:bg-surface-muted hover:text-text-primary sm:inline-flex">
               Sign in
             </Link>
@@ -482,6 +484,10 @@ export function LandingPage() {
                   ))}
                 </div>
               ))}
+              <div className="flex items-center justify-between rounded-md px-3 py-2.5">
+                <span className="text-sm font-semibold">Theme</span>
+                <ThemeToggle />
+              </div>
               <div className="grid gap-2 pt-2">
                 <Link to="/login" onClick={() => setMenuOpen(false)} className="rounded-md border border-border px-3 py-3 text-center text-sm font-medium">
                   Sign in

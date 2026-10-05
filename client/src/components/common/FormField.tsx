@@ -28,9 +28,9 @@ export const FormField = forwardRef<HTMLInputElement, FormFieldProps>(function F
           type={inputType}
           aria-invalid={!!error}
           aria-describedby={error ? `${id}-error` : undefined}
-          className={`h-10 w-full rounded-md border bg-surface px-3 text-sm outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-text-muted focus:border-primary focus:ring-4 focus:ring-primary/15 ${
+          className={`h-10 w-full rounded-md border bg-input-background px-3 text-sm text-text-primary outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-text-muted focus:border-primary focus:ring-4 focus:ring-primary/20 ${
             revealable ? 'pr-10' : ''
-          } ${error ? 'border-danger' : 'border-border'} ${className}`}
+          } ${error ? 'border-danger' : 'border-input-border'} ${className}`}
           {...rest}
         />
         {revealable && (
