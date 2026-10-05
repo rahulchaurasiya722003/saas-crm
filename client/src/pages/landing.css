@@ -1,0 +1,89 @@
+/* Landing page motion. Kept separate from index.css so it only loads with the landing page. */
+
+.landing-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.landing-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes landing-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.landing-float {
+  animation: landing-float 6s ease-in-out infinite;
+}
+
+.landing-float-slow {
+  animation: landing-float 8s ease-in-out -3s infinite;
+}
+
+@keyframes landing-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.landing-glow {
+  animation: landing-glow 9s ease-in-out infinite;
+}
+
+@keyframes landing-marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.landing-marquee {
+  animation: landing-marquee 32s linear infinite;
+}
+
+.landing-marquee:hover {
+  animation-play-state: paused;
+}
+
+@keyframes landing-pulse {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--success) 50%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 8px transparent;
+  }
+}
+
+.landing-pulse {
+  animation: landing-pulse 2.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .landing-float,
+  .landing-float-slow,
+  .landing-glow,
+  .landing-marquee,
+  .landing-pulse {
+    animation: none;
+  }
+}
