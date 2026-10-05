@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { FormField } from '../components/common/FormField'
+import { GoogleSignInButton } from '../components/auth/GoogleSignInButton'
 import { Button } from '../components/ui/Button'
 import { AuthLayout } from '../layouts/AuthLayout'
 import { getErrorMessage } from '../lib/api'
@@ -42,6 +43,7 @@ export function RegisterPage() {
       subtitle="Set up your organization and admin account."
       footer={{ text: 'Already have an account?', linkLabel: 'Sign in', to: '/login' }}
     >
+      <GoogleSignInButton label="Sign up with Google" />
       <form onSubmit={onSubmit} noValidate className="space-y-4">
         <FormField label="Organization name" autoComplete="organization" error={errors.organizationName?.message} {...register('organizationName')} />
         <div className="grid grid-cols-2 gap-3">

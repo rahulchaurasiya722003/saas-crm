@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { FormField } from '../components/common/FormField'
+import { GoogleSignInButton } from '../components/auth/GoogleSignInButton'
 import { Button } from '../components/ui/Button'
 import { AuthLayout } from '../layouts/AuthLayout'
 import { getErrorMessage } from '../lib/api'
@@ -43,6 +44,7 @@ export function LoginPage() {
       subtitle="Sign in to your NexaCRM workspace."
       footer={{ text: "Don't have an account?", linkLabel: 'Create one', to: '/register' }}
     >
+      <GoogleSignInButton label="Sign in with Google" />
       <form onSubmit={onSubmit} noValidate className="space-y-4">
         <FormField label="Email" type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
         <FormField label="Password" type="password" autoComplete="current-password" error={errors.password?.message} {...register('password')} />
