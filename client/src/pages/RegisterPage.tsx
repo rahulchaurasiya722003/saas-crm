@@ -30,7 +30,7 @@ export function RegisterPage() {
     setFormError(null)
     try {
       await signUp(values)
-      navigate('/', { replace: true })
+      navigate('/dashboard', { replace: true })
     } catch (e) {
       setFormError(getErrorMessage(e, 'Unable to create your account. Please try again.'))
     }

@@ -2,11 +2,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { lazy } from 'react'
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AppLayout } from './layouts/AppLayout'
-import { GuestRoute, ProtectedRoute } from './routes/ProtectedRoute'
+import { GuestRoute, HomeRoute, ProtectedRoute } from './routes/ProtectedRoute'
 import { AuthProvider } from './store/auth'
 import { ThemeProvider } from './store/theme'
 import { ToastProvider } from './store/toast'
 
+const LandingPage = lazy(() => import('./pages/LandingPage').then((m) => ({ default: m.LandingPage })))
 const LoginPage = lazy(() => import('./pages/LoginPage').then((m) => ({ default: m.LoginPage })))
 const RegisterPage = lazy(() => import('./pages/RegisterPage').then((m) => ({ default: m.RegisterPage })))
 const DashboardPage = lazy(() => import('./pages/DashboardPage').then((m) => ({ default: m.DashboardPage })))
@@ -31,13 +32,14 @@ function App() {
           <BrowserRouter>
             <AuthProvider>
               <Routes>
+                <Route path="/" element={<HomeRoute landing={<LandingPage />} />} />
                 <Route element={<GuestRoute />}>
                   <Route path="/login" element={<LoginPage />} />
                   <Route path="/register" element={<RegisterPage />} />
                 </Route>
                 <Route element={<ProtectedRoute />}>
                   <Route element={<AppLayout />}>
-                    <Route index element={<DashboardPage />} />
+                    <Route path="dashboard" element={<DashboardPage />} />
                     <Route path="leads" element={<LeadsPage />} />
                     <Route path="companies" element={<CompaniesPage />} />
                     <Route path="contacts" element={<ContactsPage />} />

@@ -15,10 +15,10 @@ function Breadcrumb() {
   const label = ROUTE_LABELS[pathname] ?? 'NexaCRM'
   return (
     <nav aria-label="Breadcrumb" className="hidden items-center gap-1.5 text-sm lg:flex">
-      <Link to="/" className="text-text-muted hover:text-text-primary">
+      <Link to="/dashboard" className="text-text-muted hover:text-text-primary">
         NexaCRM
       </Link>
-      {pathname !== '/' && (
+      {pathname !== '/dashboard' && (
         <>
           <ChevronRight className="size-3.5 text-text-muted" aria-hidden />
           <span aria-current="page" className="font-medium">

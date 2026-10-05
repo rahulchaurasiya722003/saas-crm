@@ -21,6 +21,14 @@ export function ProtectedRoute() {
 export function GuestRoute() {
   const { status } = useAuth()
   if (status === 'loading') return <FullPageLoader />
-  if (status === 'authenticated') return <Navigate to="/" replace />
+  if (status === 'authenticated') return <Navigate to="/dashboard" replace />
   return <Outlet />
+}
+
+// Public home page: signed-in users skip straight to the dashboard.
+export function HomeRoute({ landing }: { landing: React.ReactNode }) {
+  const { status } = useAuth()
+  if (status === 'loading') return <FullPageLoader />
+  if (status === 'authenticated') return <Navigate to="/dashboard" replace />
+  return <>{landing}</>
 }

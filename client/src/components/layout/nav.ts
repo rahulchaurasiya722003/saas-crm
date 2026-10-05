@@ -18,7 +18,7 @@ export const NAV_GROUPS: NavGroup[] = [
   {
     label: 'CRM',
     items: [
-      { label: 'Dashboard', to: '/', icon: LayoutDashboard },
+      { label: 'Dashboard', to: '/dashboard', icon: LayoutDashboard },
       { label: 'Leads', to: '/leads', icon: Target },
       { label: 'Companies', to: '/companies', icon: Building2 },
       { label: 'Contacts', to: '/contacts', icon: Users },

@@ -33,7 +33,7 @@ function NavContent({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?
               <li key={to}>
                 <NavLink
                   to={to}
-                  end={to === '/'}
+                  end={to === '/dashboard'}
                   onClick={onNavigate}
                   aria-label={collapsed ? label : undefined}
                   className={({ isActive }) =>

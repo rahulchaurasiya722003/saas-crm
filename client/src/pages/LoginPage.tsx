@@ -31,7 +31,7 @@ export function LoginPage() {
     try {
       await login(email, password)
       const from = (location.state as { from?: string } | null)?.from
-      navigate(from ?? '/', { replace: true })
+      navigate(from ?? '/dashboard', { replace: true })
     } catch (e) {
       setFormError(getErrorMessage(e, 'Unable to sign in. Please try again.'))
     }
