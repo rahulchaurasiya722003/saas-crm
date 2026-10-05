@@ -47,7 +47,7 @@ export function LoginPage() {
       <GoogleSignInButton label="Sign in with Google" />
       <form onSubmit={onSubmit} noValidate className="space-y-4">
         <FormField label="Email" type="email" autoComplete="email" error={errors.email?.message} {...register('email')} />
-        <FormField label="Password" type="password" autoComplete="current-password" error={errors.password?.message} {...register('password')} />
+        <FormField label="Password" type="password" revealable autoComplete="current-password" error={errors.password?.message} {...register('password')} />
         {formError && (
           <p role="alert" className="rounded-md bg-danger/10 px-3 py-2 text-sm text-danger">
             {formError}

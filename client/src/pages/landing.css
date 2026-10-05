@@ -3,14 +3,28 @@
 .landing-reveal {
   opacity: 0;
   transform: translateY(24px);
+  filter: blur(4px);
   transition:
     opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
-    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+    filter 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
 }
 
 .landing-reveal.is-visible {
   opacity: 1;
   transform: none;
+  filter: none;
+}
+
+/* Chart bars grow once their card scrolls into view. */
+.landing-bar {
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.landing-reveal.is-visible .landing-bar {
+  transform: scaleY(1);
 }
 
 @keyframes landing-float {
@@ -19,16 +33,16 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-10px);
+    transform: translateY(-8px);
   }
 }
 
 .landing-float {
-  animation: landing-float 6s ease-in-out infinite;
+  animation: landing-float 7s ease-in-out infinite;
 }
 
 .landing-float-slow {
-  animation: landing-float 8s ease-in-out -3s infinite;
+  animation: landing-float 9s ease-in-out -3s infinite;
 }
 
 @keyframes landing-glow {
@@ -37,7 +51,7 @@
     opacity: 0.45;
   }
   50% {
-    opacity: 0.85;
+    opacity: 0.8;
   }
 }
 
@@ -73,9 +87,29 @@
   animation: landing-pulse 2.4s ease-out infinite;
 }
 
+/* FAQ accordion: animates height with grid rows, so nothing jumps. */
+.landing-accordion {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.landing-accordion[data-open='true'] {
+  grid-template-rows: 1fr;
+}
+
+.landing-accordion > div {
+  overflow: hidden;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .landing-reveal {
     opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .landing-bar {
     transform: none;
     transition: none;
   }
@@ -85,5 +119,8 @@
   .landing-marquee,
   .landing-pulse {
     animation: none;
+  }
+  .landing-accordion {
+    transition: none;
   }
 }
